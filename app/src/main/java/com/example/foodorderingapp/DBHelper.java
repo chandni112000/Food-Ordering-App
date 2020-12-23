@@ -15,7 +15,7 @@ import java.util.ArrayList;
 public class DBHelper extends SQLiteOpenHelper {
 
     final static String DBName = "foodOrdering.db";
-    final static int DBVersion = 1;
+    final static int DBVersion = 6;
 
     // Constructor
     // In this constructor their are four arguments passed in super function:
@@ -39,14 +39,14 @@ public class DBHelper extends SQLiteOpenHelper {
                         "foodname text," +
                         "quantity int," +
                         "description text," +
-                        "name text," +
-                        "phone text," +
+//                        "name text," +
+//                        "phone text," +
                         "price int," +
                         "originalprice int," +
-                        "Gmail TEXT  , password TEXT)"
+                        "Gmail text)"
         );
 
-        db.execSQL("create Table users(Gmail TEXT primary key  , password TEXT)");
+        db.execSQL("create Table users(Gmail text primary key  , password TEXT)");
 
     }
 
@@ -60,9 +60,8 @@ public class DBHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-
     public Boolean insertData(String gmail , String password){
-        SQLiteDatabase db = this.getWritableDatabase();
+        SQLiteDatabase db = this.getReadableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put("Gmail", gmail);
         contentValues.put("password" , password);
@@ -73,7 +72,7 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     public Boolean checkusergmail(String Gmail){
-        SQLiteDatabase MyDB = this.getWritableDatabase();
+        SQLiteDatabase MyDB = this.getReadableDatabase();
         Cursor cursor = MyDB.rawQuery("select * from users where Gmail = ?", new String[] {Gmail});
         if (cursor.getCount()>0)
             return true;
@@ -83,7 +82,7 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     public Boolean checkusergmaipassword(String Gmail, String password){
-        SQLiteDatabase MyDB = this.getWritableDatabase();
+        SQLiteDatabase MyDB = this.getReadableDatabase();
         Cursor cursor = MyDB.rawQuery("Select * from users where Gmail = ? and password = ?", new String[] {Gmail,password});
         if (cursor.getCount()>0)
             return true;
@@ -103,7 +102,7 @@ public class DBHelper extends SQLiteOpenHelper {
     // Create Operation
     // This method is used to insert order in the database
     // This method is called when we are clicking on "Order Now" button and that order will be inserted in the database
-    public boolean insertOrder(int image, String foodName, int quantity, String description, String name, String phone, int price, int originalPrice){
+    public boolean insertOrder(int image, String foodName, int quantity, String description, int price, int originalPrice, String gmail){
 
         /*
           id = 0
@@ -120,18 +119,18 @@ public class DBHelper extends SQLiteOpenHelper {
 
         */
 
-        SQLiteDatabase db = getReadableDatabase();
+        SQLiteDatabase db = getWritableDatabase();
 
         ContentValues values = new ContentValues();
         values.put("image", image);
         values.put("foodname", foodName);
         values.put("quantity", quantity);
         values.put("description", description);
-        values.put("name", name);
-        values.put("phone", phone);
+//        values.put("name", name);
+//        values.put("phone", phone);
         values.put("price", price);
         values.put("originalprice", originalPrice);
-//        values.put("Gmail", gmail);
+        values.put("Gmail", gmail);
 //        values.put("password" , password);
 
 
@@ -219,7 +218,7 @@ public class DBHelper extends SQLiteOpenHelper {
     // Update Operation
     // This method is used to update order in the database
     // This method is called when we are clicking on "Update Order" button and that order will be updated in the database
-    public boolean updateOrder(int id, int image, String foodName, int quantity, String description, String name, String phone, int price){
+    public boolean updateOrder(int id, int image, String foodName, int quantity, String description, int price){
 
         /*
           id = 0
@@ -240,9 +239,10 @@ public class DBHelper extends SQLiteOpenHelper {
         values.put("foodname", foodName);
         values.put("quantity", quantity);
         values.put("description", description);
-        values.put("name", name);
-        values.put("phone", phone);
+//        values.put("name", name);
+//        values.put("phone", phone);
         values.put("price", price);
+//        values.put("Gmail", gmail);
 
         // Here when update method is called it will return id of updated row
         long value = db.update("orders", values, "id="+id, null);
@@ -269,6 +269,16 @@ public class DBHelper extends SQLiteOpenHelper {
         int value = db.delete("orders", "id="+id, null);
         return value;
 
+    }
+    public int returnPrice(){
+        int sum=0;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("select sum(price) as total from orders",null);
+        if (cursor.moveToFirst()){
+            sum = cursor.getInt(cursor.getColumnIndex("total"));
+
+        }
+        return sum;
     }
 
 }

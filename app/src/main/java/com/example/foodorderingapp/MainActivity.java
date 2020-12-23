@@ -19,6 +19,8 @@ import com.example.foodorderingapp.Adapters.MainAdapter;
 import com.example.foodorderingapp.Models.MainModel;
 import com.example.foodorderingapp.databinding.ActivityMainBinding;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 
@@ -38,7 +40,11 @@ public class MainActivity extends AppCompatActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-
+        // Write a message to the database
+//        FirebaseDatabase database = FirebaseDatabase.getInstance();
+//        DatabaseReference myRef = database.getReference("message");
+//
+//        myRef.setValue("Hello, World!");
 
         // Custom Toolbar
         Toolbar customToolbar = binding.mainCustomToolbar.customToolbar;
@@ -145,7 +151,12 @@ public class MainActivity extends AppCompatActivity {
 
             case R.id.myOrders:
                 // Move to order activity from main activity
-                startActivity(new Intent(MainActivity.this, OrderActivity.class));
+                Intent intent = new Intent(MainActivity.this, OrderActivity.class);
+                //geting intent value
+//                String custumergmail = getIntent().getStringExtra("SignIngmail");
+//                intent.putExtra("Maingmail",custumergmail);
+                startActivity(intent);
+
                 break;
 
             case R.id.searchBar:

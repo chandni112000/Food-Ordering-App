@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.TextView;
 
 import com.example.foodorderingapp.Adapters.OrderAdapter;
 import com.example.foodorderingapp.Models.OrderModel;
@@ -69,6 +70,9 @@ public class OrderActivity extends AppCompatActivity {
         ArrayList<OrderModel> list = helper.getOrders();
 
 
+//        String Cgmail = getIntent().getStringExtra("Maingmail");
+//        OrderAdapter g = new OrderAdapter();
+//        g.getGmail(Cgmail);
         // Here we are adding items in the array list through the database
 
 
@@ -77,11 +81,21 @@ public class OrderActivity extends AppCompatActivity {
         binding.orderRecyclerView.setAdapter(adapter);
 
 
+
+
         // Vertical scrolling using linear layout manager
         // Setting linear layout manager on the recycler view
         // Here linear layout manager is used to vertically scroll all the items of the recycler view
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         binding.orderRecyclerView.setLayoutManager(layoutManager);
+
+        int Amount;
+        Amount = helper.returnPrice();
+        TextView Totalprice = findViewById(R.id.totalPrice);
+        Totalprice.setText(""+Amount);
+
+
+
 
     }
 

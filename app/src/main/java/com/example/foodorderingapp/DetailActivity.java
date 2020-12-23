@@ -7,7 +7,9 @@ import androidx.appcompat.widget.Toolbar;
 import android.content.DialogInterface;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.foodorderingapp.databinding.ActivityDetailBinding;
@@ -15,8 +17,12 @@ import com.example.foodorderingapp.databinding.ActivityDetailBinding;
 public class DetailActivity extends AppCompatActivity {
 
 
+    String customergmail = SignIn_Activity.getGmail();
+
     ActivityDetailBinding binding;
     int count;
+
+
 
 
     @Override
@@ -59,6 +65,8 @@ public class DetailActivity extends AppCompatActivity {
         // Creating database helper object
         final DBHelper helper = new DBHelper(this);
 
+
+//        String customergmail = getIntent().getStringExtra("Ordergmail");
 
 
         // Code for order processing page
@@ -137,12 +145,12 @@ public class DetailActivity extends AppCompatActivity {
                 public void onClick(View v) {
 
                     // First Username and mobile number will be validated
-                    if(!validateUsername() | !validateMobileNumber()) {
-                        return;
-                    }
+//                    if(!validateUsername() | !validateMobileNumber()) {
+//                        return;
+//                    }
 
                     // After validation below code to buy the item will run
-                    else {
+//                    else {
 
                         // Alert Dialog Box
                         // It will be shown when we press "Order Now" button in our mobile
@@ -159,10 +167,11 @@ public class DetailActivity extends AppCompatActivity {
                                                 detailName,
                                                 Integer.parseInt(binding.quantity.getText().toString()),
                                                 detailDescription,
-                                                binding.personName.getText().toString(),
-                                                binding.mobileNumber.getText().toString(),
+//                                                binding.personName.getText().toString(),
+//                                                binding.mobileNumber.getText().toString(),
                                                 Integer.parseInt(binding.detailPrice.getText().toString()),
-                                                detailPrice
+                                                detailPrice,
+                                                customergmail
                                         );
 
                                         if (isInserted)
@@ -178,7 +187,7 @@ public class DetailActivity extends AppCompatActivity {
                             }
                         }).show();
 
-                    }
+//                    }
 
                 }
             });
@@ -208,10 +217,9 @@ public class DetailActivity extends AppCompatActivity {
              foodName = 2
              quantity = 3
              description = 4
-             name = 5
-             phone = 6
-             price = 7
-             originalPrice = 8
+
+             price = 5
+             originalPrice = 6
             */
 
 
@@ -220,15 +228,15 @@ public class DetailActivity extends AppCompatActivity {
             binding.detailName.setText(cursor.getString(2));
             binding.quantity.setText(String.format("%d", cursor.getInt(3)));
             binding.detailDescription.setText(cursor.getString(4));
-            binding.personName.setText(cursor.getString(5));
-            binding.mobileNumber.setText(cursor.getString(6));
-            binding.detailPrice.setText(String.format("%d", cursor.getInt(7)));
+//            binding.personName.setText(cursor.getString(5));
+//            binding.mobileNumber.setText(cursor.getString(6));
+            binding.detailPrice.setText(String.format("%d", cursor.getInt(5)));
 
 
 
             // Here we are getting original price of the item from the database
             // It is used when quantity is incremented or decremented at that time price is also increased or decreased
-            int originalPrice = cursor.getInt(8);
+            int originalPrice = cursor.getInt(6);
 
 
 
@@ -277,12 +285,12 @@ public class DetailActivity extends AppCompatActivity {
                 public void onClick(View v) {
 
                     // First Username and mobile number will be validated
-                    if(!validateUsername() | !validateMobileNumber()) {
-                        return;
-                    }
+//                    if(!validateUsername() | !validateMobileNumber()) {
+//                        return;
+//                    }
 
                     // After validation below code to update the item will run
-                    else {
+//                    else {
 
                         // Alert Dialog Box
                         // It will be shown when we press "Update Order" button in our mobile
@@ -300,9 +308,11 @@ public class DetailActivity extends AppCompatActivity {
                                                 binding.detailName.getText().toString(),
                                                 Integer.parseInt(binding.quantity.getText().toString()),
                                                 binding.detailDescription.getText().toString(),
-                                                binding.personName.getText().toString(),
-                                                binding.mobileNumber.getText().toString(),
+//                                                binding.personName.getText().toString(),
+//                                                binding.mobileNumber.getText().toString(),
                                                 Integer.parseInt(binding.detailPrice.getText().toString())
+//                                                customergmail
+
                                         );
 
                                         if (isUpdated)
@@ -318,7 +328,7 @@ public class DetailActivity extends AppCompatActivity {
                             }
                         }).show();
 
-                    }
+//                    }
 
                 }
             });
@@ -334,70 +344,70 @@ public class DetailActivity extends AppCompatActivity {
 
 
     // Username Validation
-    private boolean validateUsername(){
-
-        String Username = binding.personName.getText().toString();
-        //        ^           Beginning of the string
-        //       [A-Za-z]     First character is not whitespace but it can be either capitals or small letter
-        //       [A-Z a-z]    Other characters can be either whitespaces or capitals or small letters
-        //        +           String contains at least one alphabetical char
-        //        $           End of the string
-        String checkUsername = "^[A-Za-z][A-Z a-z]+$";
-
-        if(Username.isEmpty()){
-            binding.personName.setError("Field cannot be empty");
-            return false;
-        }
-        else if(Username.length()>20){
-            binding.personName.setError("Name is too large");
-            return false;
-        }
-        else if(Username.length()<=5){
-            binding.personName.setError("Name is too short");
-            return false;
-        }
-        else if(!Username.matches(checkUsername)){
-            binding.personName.setError("Name must not contain numeric or special characters or first whitespace character");
-            return false;
-        }
-        else {
-            binding.personName.setError(null);
-            return true;
-        }
-
-    }
-
-
-    // Mobile Number Validation
-    private boolean validateMobileNumber(){
-
-        String mobileNumber = binding.mobileNumber.getText().toString();
-        //        [1-9]          It matches first digit and checks if number lies between 1 to 9
-        //        [0-9]          It matches other digits and checks if number lies between 0 to 9
-        //        {9}            It specifies remaining
-        String checkMobileNumber = "[1-9][0-9]{9}";
-
-        if(mobileNumber.isEmpty()){
-            binding.mobileNumber.setError("Field cannot be empty");
-            return false;
-        }
-        else if(mobileNumber.length()>10){
-            binding.mobileNumber.setError("Mobile number must be of 10 characters");
-            return false;
-        }
-        else if(mobileNumber.length()<10){
-            binding.mobileNumber.setError("Mobile number must be of 10 characters");
-            return false;
-        }
-        else if(!mobileNumber.matches(checkMobileNumber)){
-            binding.mobileNumber.setError("Invalid mobile number");
-            return false;
-        }
-        else {
-            binding.mobileNumber.setError(null);
-            return true;
-        }
-
-    }
+//    private boolean validateUsername(){
+//
+//        String Username = binding.personName.getText().toString();
+//        //        ^           Beginning of the string
+//        //       [A-Za-z]     First character is not whitespace but it can be either capitals or small letter
+//        //       [A-Z a-z]    Other characters can be either whitespaces or capitals or small letters
+//        //        +           String contains at least one alphabetical char
+//        //        $           End of the string
+//        String checkUsername = "^[A-Za-z][A-Z a-z]+$";
+//
+//        if(Username.isEmpty()){
+//            binding.personName.setError("Field cannot be empty");
+//            return false;
+//        }
+//        else if(Username.length()>20){
+//            binding.personName.setError("Name is too large");
+//            return false;
+//        }
+//        else if(Username.length()<=5){
+//            binding.personName.setError("Name is too short");
+//            return false;
+//        }
+//        else if(!Username.matches(checkUsername)){
+//            binding.personName.setError("Name must not contain numeric or special characters or first whitespace character");
+//            return false;
+//        }
+//        else {
+//            binding.personName.setError(null);
+//            return true;
+//        }
+//
+//    }
+//
+//
+//    // Mobile Number Validation
+//    private boolean validateMobileNumber(){
+//
+//        String mobileNumber = binding.mobileNumber.getText().toString();
+//        //        [1-9]          It matches first digit and checks if number lies between 1 to 9
+//        //        [0-9]          It matches other digits and checks if number lies between 0 to 9
+//        //        {9}            It specifies remaining
+//        String checkMobileNumber = "[1-9][0-9]{9}";
+//
+//        if(mobileNumber.isEmpty()){
+//            binding.mobileNumber.setError("Field cannot be empty");
+//            return false;
+//        }
+//        else if(mobileNumber.length()>10){
+//            binding.mobileNumber.setError("Mobile number must be of 10 characters");
+//            return false;
+//        }
+//        else if(mobileNumber.length()<10){
+//            binding.mobileNumber.setError("Mobile number must be of 10 characters");
+//            return false;
+//        }
+//        else if(!mobileNumber.matches(checkMobileNumber)){
+//            binding.mobileNumber.setError("Invalid mobile number");
+//            return false;
+//        }
+//        else {
+//            binding.mobileNumber.setError(null);
+//            return true;
+//        }
+//
+//    }
 
 }

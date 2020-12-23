@@ -26,12 +26,18 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.viewHolder>{
 
     ArrayList<OrderModel> list;
     Context context;
-
+    String Cgmail;
     // Constructor
+    public OrderAdapter(){
+
+    }
     public OrderAdapter(ArrayList<OrderModel> list, Context context) {
         this.list = list;
         this.context = context;
     }
+//    public void getGmail(String Customergmail){
+//        Cgmail = Customergmail ;
+//    }
 
     // This function is used to inflate sample layout file into "activity_order.xml" layout file
     @NonNull
@@ -49,7 +55,7 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.viewHolder>{
 
         holder.orderImage.setImageResource(model.getOrderImage());
         holder.orderName.setText(model.getOrderName());
-        holder.orderNumber.setText(model.getOrderNumber());
+//        holder.orderNumber.setText(model.getOrderNumber());
         holder.orderPrice.setText(model.getOrderPrice());
 
         // Following is the code what happens when we click any of the item of order activity
@@ -59,6 +65,7 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.viewHolder>{
             public void onClick(View v) {
 
                 Intent moveToDetailActivity = new Intent(context, DetailActivity.class);
+//                moveToDetailActivity.putExtra("Ordergmail",Cgmail);
                 moveToDetailActivity.putExtra("orderNumber", model.getOrderNumber());
                 moveToDetailActivity.putExtra("type", 2);
                 context.startActivity(moveToDetailActivity);
@@ -126,7 +133,7 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.viewHolder>{
 
             orderImage = itemView.findViewById(R.id.orderImage);
             orderName = itemView.findViewById(R.id.orderName);
-            orderNumber = itemView.findViewById(R.id.orderNumber);
+//            orderNumber = itemView.findViewById(R.id.orderNumber);
             orderPrice = itemView.findViewById(R.id.orderPrice);
 
         }
